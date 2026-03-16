@@ -65,7 +65,9 @@ object Sequences: // Essentially, generic linkedlists
      * E.g., [10] => [10]
      * E.g., [] => []
      */
-    def reverse[A](s: Sequence[A]): Sequence[A] = ???
+    def reverse[A](s: Sequence[A]): Sequence[A] = s match
+      case Cons(h, t) if h != Nil() => concat(reverse(t), Cons(h, Nil()))
+      case _ => Nil()
 
     /*
      * Map the elements of the sequence to a new sequence and flatten the result
