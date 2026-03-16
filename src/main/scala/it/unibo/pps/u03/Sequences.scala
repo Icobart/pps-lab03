@@ -32,7 +32,10 @@ object Sequences: // Essentially, generic linkedlists
      * E.g., [10, 20, 30], 0 => [10, 20, 30]
      * E.g., [], 2 => []
      */
-    def skip[A](s: Sequence[A])(n: Int): Sequence[A] = ???
+    def skip[A](s: Sequence[A])(n: Int): Sequence[A] = s match
+      case Cons(h, t) if n > 0 => skip(t)(n - 1)
+      case Cons(h, t) => Cons(h, t)
+      case _ => Nil()
 
     /*
      * Zip two sequences
@@ -40,7 +43,9 @@ object Sequences: // Essentially, generic linkedlists
      * E.g., [10], [] => []
      * E.g., [], [] => []
      */
-    def zip[A, B](first: Sequence[A], second: Sequence[B]): Sequence[(A, B)] = ???
+    def zip[A, B](first: Sequence[A], second: Sequence[B]): Sequence[(A, B)] = (first, second) match
+      case (Cons(h1, t1), Cons(h2, t2)) if h1 != Nil() && h2 != Nil() => Cons((h1, h2), zip(t1, t2))
+      case _ => Nil()
 
     /*
      * Concatenate two sequences
@@ -48,7 +53,11 @@ object Sequences: // Essentially, generic linkedlists
      * E.g., [10], [] => [10]
      * E.g., [], [] => []
      */
-    def concat[A](s1: Sequence[A], s2: Sequence[A]): Sequence[A] = ???
+    def concat[A](s1: Sequence[A], s2: Sequence[A]): Sequence[A] = (s1, s2) match
+      case (Cons(h1, t1), Cons(h2, t2)) if s1 != Nil() => Cons(h1, concat(t1, s2))
+      case (_, Cons(h2, t2)) if s2 != Nil() => Cons(h2, t2)
+      case _ => Nil()
+
 
     /*
      * Reverse the sequence
