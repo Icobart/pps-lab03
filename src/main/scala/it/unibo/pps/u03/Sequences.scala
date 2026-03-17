@@ -88,7 +88,7 @@ object Sequences: // Essentially, generic linkedlists
       @annotation.tailrec
       def _reverse(rev: Sequence[A], acc: Sequence[A]): Sequence[A] = rev match
         case Cons(h, t) => _reverse(t, Cons(h, acc))
-        case Nil() => acc
+        case _ => acc
       _reverse(s, Nil())
 
     /*
@@ -97,9 +97,17 @@ object Sequences: // Essentially, generic linkedlists
      * E.g., [10, 20, 30], calling with mapper(v => [v]) returns [10, 20, 30]
      * E.g., [10, 20, 30], calling with mapper(v => Nil()) returns []
      */
+    /*
     def flatMap[A, B](s: Sequence[A])(mapper: A => Sequence[B]): Sequence[B] = s match
       case Cons(h, t) => concat(mapper(h), flatMap(t)(mapper))
       case _ => Nil()
+    */
+    def flatMap[A, B](s: Sequence[A])(mapper: A => Sequence[B]): Sequence[B] =
+      @annotation.tailrec
+      def _flatMap(flat: Sequence[A], acc: Sequence[B]): Sequence[B] = flat match
+        case Cons(h, t) => _flatMap(t, concat(acc, mapper(h)))
+        case _ => acc
+      _flatMap(s, Nil())
 
     /*
      * Get the minimum element in the sequence
