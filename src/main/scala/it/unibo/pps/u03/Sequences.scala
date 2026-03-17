@@ -187,6 +187,11 @@ object Sequences: // Essentially, generic linkedlists
         case Nil() => (reverse(parYes), reverse(parNo))
       _partition(s, Nil(), Nil())
 
+    // Task 2.2
+    def foldLeft[A, B](s: Sequence[A])(defVal: B)(op: (B, A) => B): B = s match
+      case Cons(h, t) => foldLeft(t)(op(defVal, h))(op)
+      case _ => defVal
+
 @main def trySequences =
   import Sequences.* 
   val l = Sequence.Cons(10, Sequence.Cons(20, Sequence.Cons(30, Sequence.Nil())))
