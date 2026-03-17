@@ -1,6 +1,6 @@
 package u03
 
-import u03.Streams.Stream.cons
+import u03.Sequences.Sequence.*
 
 object Streams extends App :
 
@@ -49,11 +49,23 @@ object Streams extends App :
 
     def fromList[A](list: List[A]): Stream[A] = list match
       case head :: tail => cons(head, fromList(tail))
-      case Nil => empty()
+      case _ => Empty()
+
+    val fibonacci: Stream[Int] =
+      def _fib(a: Int, b: Int): Stream[Int] = cons(a, _fib(b, a + b))
+      _fib(0, 1)
 
     def interleave[A](s1: Stream[A], s2: Stream[A]): Stream[A] = s1 match
       case Cons(head, tail) => cons(head(), interleave(s2, tail()))
       case _ => s2
+
+    def cycle[A](list: Sequence[A]): Stream[A] =
+      def _cycle(curr: Sequence[A]): Stream[A] = curr match
+        case Sequence.Cons(h, t) => Stream.cons(h, _cycle(t))
+        case _ => _cycle(list)
+      list match
+        case Nil() => Empty()
+        case _ => _cycle(list)
 
   end Stream
 
@@ -76,14 +88,15 @@ object Streams extends App :
   println(Stream.toList(Stream.fill(3)("a"))) // Cons(a, Cons (a, Cons (a, Nil())))
   println(Stream.toList(Stream.fill(-3)("b"))) // Nil()
 
-  val fibonacci: Stream[Int] =
-    def _fib(a: Int, b: Int): Stream[Int] = cons(a, _fib(b, a + b))
-    _fib(0, 1)
-  println(Stream.toList(Stream.take(fibonacci)(5))) // Cons (0 , Cons (1 , Cons (1 , Cons (2 , Cons (3 , Nil ()))))
+  println(Stream.toList(Stream.take(Stream.fibonacci)(5))) // Cons (0 , Cons (1 , Cons (1 , Cons (2 , Cons (3 , Nil ()))))
 
   val s1 = Stream.fromList(List(1, 3, 5))
   val s2 = Stream.fromList(List(2, 4, 6, 8, 10))
   println(Stream.toList(Stream.interleave(s1, s2)))
-  // Expected output : Cons (1 , Cons (2 , Cons (3 , Cons (4 , Cons (5 , Cons (6 , Cons (8 , Cons (10 , Nil ()))))))))
+  // Cons (1 , Cons (2 , Cons (3 , Cons (4 , Cons (5 , Cons (6 , Cons (8 , Cons (10 , Nil ()))))))))
 
-
+  val seqToCycle = Cons("a", Cons("b", Cons("c", Nil())))
+  val infiniteCycleStream = Stream.cycle(seqToCycle)
+  val innovativeStream = Stream.toList(Stream.take(infiniteCycleStream)(5))
+  println(innovativeStream)
+  // Cons (a, Cons (b, Cons (c, Cons (a, Cons (b, Nil ())))))
