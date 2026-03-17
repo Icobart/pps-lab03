@@ -119,10 +119,10 @@ object Sequences: // Essentially, generic linkedlists
       def _min(seq: Sequence[Int], currentMin: Int): Optional[Int] = seq match
         case Cons(h, t) if h < currentMin => _min(t, h)
         case Cons(_, t) => _min(t, currentMin)
-        case Nil() => Optional.Just(currentMin)
+        case _ => Optional.Just(currentMin)
       s match
         case Cons(h, t) => _min(t, h)
-        case Nil() => Optional.Empty()
+        case _ => Optional.Empty()
 
     /*
      * Get the elements at even indices
@@ -184,7 +184,7 @@ object Sequences: // Essentially, generic linkedlists
       def _partition(seq: Sequence[A], parYes: Sequence[A], parNo: Sequence[A]): (Sequence[A], Sequence[A]) = seq match
         case Cons(h, t) if pred(h) => _partition(t, Cons(h, parYes), parNo)
         case Cons(h, t) => _partition(t, parYes, Cons(h, parNo))
-        case Nil() => (reverse(parYes), reverse(parNo))
+        case _ => (reverse(parYes), reverse(parNo))
       _partition(s, Nil(), Nil())
 
     // Task 2.2
