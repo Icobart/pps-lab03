@@ -114,7 +114,15 @@ object Sequences: // Essentially, generic linkedlists
      * E.g., [30, 20, 10] => 10
      * E.g., [10, 1, 30] => 1
      */
-    def min(s: Sequence[Int]): Optional[Int] = ???
+    def min(s: Sequence[Int]): Optional[Int] =
+      @annotation.tailrec
+      def _min(seq: Sequence[Int], currentMin: Int): Optional[Int] = seq match
+        case Cons(h, t) if h < currentMin => _min(t, h)
+        case Cons(_, t) => _min(t, currentMin)
+        case Nil() => Optional.Just(currentMin)
+      s match
+        case Cons(h, t) => _min(t, h)
+        case Nil() => Optional.Empty()
 
     /*
      * Get the elements at even indices
