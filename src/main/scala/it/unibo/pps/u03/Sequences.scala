@@ -61,10 +61,17 @@ object Sequences: // Essentially, generic linkedlists
      * E.g., [10], [] => [10]
      * E.g., [], [] => []
      */
+    /*
     def concat[A](s1: Sequence[A], s2: Sequence[A]): Sequence[A] = s1 match
       case Cons(h, t) => Cons(h, concat(t, s2))
       case Nil() => s2
-
+    */
+    def concat[A](s1: Sequence[A], s2: Sequence[A]): Sequence[A] =
+      @annotation.tailrec
+      def _concat(con: Sequence[A], acc: Sequence[A]): Sequence[A] = con match
+        case Cons(h, t) => _concat(t, Cons(h, acc))
+        case _ => acc
+      _concat(reverse(s1), s2)
 
     /*
      * Reverse the sequence
