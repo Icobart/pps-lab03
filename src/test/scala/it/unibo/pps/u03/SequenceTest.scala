@@ -3,6 +3,8 @@ package it.unibo.pps.u03
 import org.junit.*
 import org.junit.Assert.*
 import u03.Optionals.Optional.{Empty, Just}
+import it.unibo.pps.u02.Modules.*
+import it.unibo.pps.u02.Modules.Person.*
 
 class SequenceTest:
   import u03.Sequences.*
@@ -84,3 +86,22 @@ class SequenceTest:
     val (evenEmpty, oddEmpty) = partition(emptySequence)(x => true)
     assertEquals(Nil(), evenEmpty)
     assertEquals(Nil(), oddEmpty)
+
+  @Test def testCourses() =
+    val persons: Sequence[Person] = Cons(
+      Teacher("Viroli", "PPS"),
+      Cons(
+        Teacher("Aguzzi", "PPS"),
+        Cons(
+          Teacher("Ricci", "PCD"),
+          Cons(
+            Student("Mario", 2015),
+            Nil()
+          )
+        )
+      )
+    )
+    val expectedCourses = Cons("PPS", Cons("PPS", Cons("PCD", Nil())))
+    assertEquals(expectedCourses, courses(persons))
+
+
