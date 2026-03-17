@@ -34,7 +34,19 @@ object Modules extends App :
       case _ => Nil()
     )
 
+  // Task 2.3
+  def countCourses(ps: Sequence[Person]): Int =
+    val teachers = filter(ps)(_ match
+      case Teacher(_, _) => true
+      case _ => false
+    )
+    val extractedCourses = map(teachers)(_ match
+      case Teacher(_, c) => c
+      case _ => ""
+    )
+    foldLeft(distinct(extractedCourses))(0)((acc, _) => acc + 1)
 
   val testPersons = Cons(Teacher("Viroli", "PPS"), Cons(Teacher("Aguzzi", "PPS"),
                     Cons(Teacher("Ricci", "PCD"), Cons(Student("Mario", 2015), Nil()))))
   println("Courses: "+ courses(testPersons))
+  println("Number of distinct courses: " + countCourses(testPersons))

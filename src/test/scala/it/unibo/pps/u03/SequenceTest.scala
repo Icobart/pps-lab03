@@ -87,7 +87,7 @@ class SequenceTest:
     assertEquals(Nil(), evenEmpty)
     assertEquals(Nil(), oddEmpty)
 
-  @Test def testCourses() =
+  @Test def testCoursesAndCount() =
     val persons: Sequence[Person] = Cons(
       Teacher("Viroli", "PPS"),
       Cons(
@@ -103,6 +103,7 @@ class SequenceTest:
     )
     val expectedCourses = Cons("PPS", Cons("PPS", Cons("PCD", Nil())))
     assertEquals(expectedCourses, courses(persons))
+    assertEquals(2, countCourses(persons))
 
   @Test def testFoldLeft() =
     val lst = Cons(3, Cons(7, Cons(1, Cons(5, Nil()))))
