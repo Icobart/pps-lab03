@@ -154,7 +154,7 @@ object Sequences: // Essentially, generic linkedlists
      */
     def distinct[A](s: Sequence[A]): Sequence[A] = s match
       case Cons(h, t) => Cons(h, distinct(filter(t)(_ != h)))
-      case Nil() => Nil()
+      case _ => Nil()
 
     /*
      * Group contiguous elements in the sequence
@@ -162,14 +162,30 @@ object Sequences: // Essentially, generic linkedlists
      * E.g., [10, 20, 30] => [[10], [20], [30]]
      * E.g., [10, 20, 20, 30] => [[10], [20, 20], [30]]
      */
-    def group[A](s: Sequence[A]): Sequence[Sequence[A]] = ???
+    def group[A](s: Sequence[A]): Sequence[Sequence[A]] =
+      @annotation.tailrec
+      def _group(seq: Sequence[A], currentGroup: Sequence[A], acc: Sequence[Sequence[A]]): Sequence[Sequence[A]] = seq match
+        case Cons(h, t) => currentGroup match
+          case Nil() => _group(t, Cons(h, Nil()), acc)
+          case Cons(hc, _) if hc == h => _group(t, Cons(h, currentGroup), acc)
+          case _ => _group(t, Cons(h, Nil()), Cons(currentGroup, acc))
+        case Nil() => currentGroup match
+          case Nil() => reverse(acc)
+          case _ => reverse(Cons(currentGroup, acc))
+      _group(s, Nil(), Nil())
 
     /*
      * Partition the sequence into two sequences based on the predicate
      * E.g., [10, 20, 30] => ([10], [20, 30]) if pred is (_ < 20)
      * E.g., [11, 20, 31] => ([20], [11, 31]) if pred is (_ % 2 == 0)
      */
-    def partition[A](s: Sequence[A])(pred: A => Boolean): (Sequence[A], Sequence[A]) = ???
+    def partition[A](s: Sequence[A])(pred: A => Boolean): (Sequence[A], Sequence[A]) =
+      @annotation.tailrec
+      def _partition(seq: Sequence[A], parYes: Sequence[A], parNo: Sequence[A]): (Sequence[A], Sequence[A]) = seq match
+        case Cons(h, t) if pred(h) => _partition(t, Cons(h, parYes), parNo)
+        case Cons(h, t) => _partition(t, parYes, Cons(h, parNo))
+        case Nil() => (reverse(parYes), reverse(parNo))
+      _partition(s, Nil(), Nil())
 
 @main def trySequences =
   import Sequences.* 
