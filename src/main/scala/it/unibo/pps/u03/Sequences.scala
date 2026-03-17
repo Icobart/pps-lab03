@@ -48,7 +48,12 @@ object Sequences: // Essentially, generic linkedlists
       case (Cons(h1, t1), Cons(h2, t2)) => Cons((h1, h2), zip(t1, t2))
       case _ => Nil()
     */
-    def zip[A, B](first: Sequence[A], second: Sequence[B]): Sequence[(A, B)] = ???
+    def zip[A, B](first: Sequence[A], second: Sequence[B]): Sequence[(A, B)] =
+      @annotation.tailrec
+      def _zip(s1: Sequence[A], s2: Sequence[B], acc: Sequence[(A, B)]): Sequence[(A, B)] = (s1, s2) match
+        case (Cons(h1, t1), Cons(h2, t2)) => _zip(t1, t2, Cons((h1, h2), acc))
+        case _ => acc
+      reverse(_zip(first, second, Nil()))
 
     /*
      * Concatenate two sequences
