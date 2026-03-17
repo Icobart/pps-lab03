@@ -1,5 +1,7 @@
 package u03
 
+import u03.Streams.Stream.cons
+
 object Streams extends App :
 
   import Sequences.*
@@ -65,5 +67,10 @@ object Streams extends App :
 
   println(Stream.toList(Stream.fill(3)("a"))) // Cons(a, Cons (a, Cons (a, Nil())))
   println(Stream.toList(Stream.fill(-3)("b"))) // Nil()
+
+  val fibonacci: Stream[Int] =
+    def _fib(a: Int, b: Int): Stream[Int] = cons(a, _fib(b, a + b))
+    _fib(0, 1)
+  println(Stream.toList(Stream.take(fibonacci)(5))) // Cons (0 , Cons (1 , Cons (1 , Cons (2 , Cons (3 , Nil ()))))
 
 
