@@ -129,7 +129,13 @@ object Sequences: // Essentially, generic linkedlists
      * E.g., [10, 20, 30] => [10, 30]
      * E.g., [10, 20, 30, 40] => [10, 30]
      */
-    def evenIndices[A](s: Sequence[A]): Sequence[A] = ???
+    def evenIndices[A](s: Sequence[A]): Sequence[A] =
+      @annotation.tailrec
+      def _even(seq: Sequence[A], acc: Sequence[A]): Sequence[A] = seq match
+        case Cons(h, Cons(_, t)) => _even(t, Cons(h, acc))
+        case Cons(h, Nil()) => Cons(h, acc)
+        case _ => acc
+      reverse(_even(s, Nil()))
 
     /*
      * Check if the sequence contains the element
