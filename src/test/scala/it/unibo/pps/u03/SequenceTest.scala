@@ -103,7 +103,8 @@ class SequenceTest:
     )
     val expectedCourses = Cons("PPS", Cons("PPS", Cons("PCD", Nil())))
     assertEquals(expectedCourses, courses(persons))
-    assertEquals(2, countCourses(persons))
+    val expectedCount = 2
+    assertEquals(expectedCount, countCourses(persons))
 
   @Test def testFoldLeft() =
     val lst = Cons(3, Cons(7, Cons(1, Cons(5, Nil()))))
