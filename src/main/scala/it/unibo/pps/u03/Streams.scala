@@ -47,6 +47,14 @@ object Streams extends App :
       case n if n <= 0 => Empty()
       case _ => cons(k, fill(n - 1)(k))
 
+    def fromList[A](list: List[A]): Stream[A] = list match
+      case head :: tail => cons(head, fromList(tail))
+      case Nil => empty()
+
+    def interleave[A](s1: Stream[A], s2: Stream[A]): Stream[A] = s1 match
+      case Cons(head, tail) => cons(head(), interleave(s2, tail()))
+      case _ => s2
+
   end Stream
 
 @main def tryStreams =
@@ -72,5 +80,10 @@ object Streams extends App :
     def _fib(a: Int, b: Int): Stream[Int] = cons(a, _fib(b, a + b))
     _fib(0, 1)
   println(Stream.toList(Stream.take(fibonacci)(5))) // Cons (0 , Cons (1 , Cons (1 , Cons (2 , Cons (3 , Nil ()))))
+
+  val s1 = Stream.fromList(List(1, 3, 5))
+  val s2 = Stream.fromList(List(2, 4, 6, 8, 10))
+  println(Stream.toList(Stream.interleave(s1, s2)))
+  // Expected output : Cons (1 , Cons (2 , Cons (3 , Cons (4 , Cons (5 , Cons (6 , Cons (8 , Cons (10 , Nil ()))))))))
 
 
